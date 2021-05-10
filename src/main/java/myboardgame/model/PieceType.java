@@ -1,4 +1,4 @@
-package myboardgame;
+package myboardgame.model;
 
 public enum PieceType {
     BLUE,

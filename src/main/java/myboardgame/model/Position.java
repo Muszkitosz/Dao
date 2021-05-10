@@ -1,4 +1,4 @@
-package myboardgame;
+package myboardgame.model;
 
 public record Position(int row, int col) {
 

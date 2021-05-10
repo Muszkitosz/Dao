@@ -1,4 +1,4 @@
-package myboardgame;
+package myboardgame.model;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

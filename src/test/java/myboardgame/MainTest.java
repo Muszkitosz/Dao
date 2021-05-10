@@ -1,2 +1,4 @@
-package myboardgame;public class MainTest {
+package myboardgame;
+
+public class MainTest {
 }
