@@ -15,6 +15,7 @@ import javafx.scene.shape.Circle;
 
 import myboardgame.model.MyBoardGameModel;
 import myboardgame.model.DiskDirection;
+import myboardgame.model.PieceType;
 import myboardgame.model.Position;
 
 public class MyBoardGameController {
@@ -104,6 +105,8 @@ public class MyBoardGameController {
                     var direction = DiskDirection.of(position.row() - selected.row(), position.col() - selected.col());
                      // Logger.debug("Moving piece {} {}", pieceNumber, direction);
                     model.move(pieceNumber, direction);
+                    model.isGoal(PieceType.BLUE);
+                    model.isGoal(PieceType.RED);
                     deselectSelectedPosition();
                     alterSelectionPhase();
                 }

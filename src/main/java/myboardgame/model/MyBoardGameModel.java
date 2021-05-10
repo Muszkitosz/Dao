@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MyBoardGameModel {
 
@@ -83,6 +84,7 @@ public class MyBoardGameModel {
             }
             else {return false;}
         }
+        System.out.println(direction+":"+counter+"\n");
         return true;
     }
 
@@ -130,13 +132,43 @@ public class MyBoardGameModel {
         }
         return joiner.toString();
     }
-    /*
-    public boolean isGoal() {
-        for (int i = 0; i < pieces.length; i++) {
-            if (pieces[i].getType() == PieceType.BLUE && )
+
+    public boolean isGoal(PieceType color) {
+
+        if (Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition().row()).distinct().count() == 1) {
+            System.out.println("ggrow");
+            return true;
         }
+        if (Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition().col()).distinct().count() == 1) {
+            System.out.println("ggcol");
+            return true;
+        }
+        List<Position> positions = Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition()).collect(Collectors.toList());
+        int minrow=Integer.MAX_VALUE;
+        int maxrow=Integer.MIN_VALUE;
+        int mincol=Integer.MAX_VALUE;
+        int maxcol=Integer.MIN_VALUE;
+        for (int i=0; i < positions.size(); i++) {
+            if (positions.get(i).row() < minrow) {
+                minrow = positions.get(i).row();
+            }
+            if (positions.get(i).row() > maxrow) {
+                maxrow = positions.get(i).row();
+            }
+            if (positions.get(i).col() < mincol) {
+                mincol = positions.get(i).col();
+            }
+            if (positions.get(i).col() > maxcol) {
+                maxcol = positions.get(i).col();
+            }
+        }
+        if (maxrow-minrow == 1 && maxcol-mincol == 1) {
+            System.out.println("gg");
+            return true;
+        }
+        return false;
     }
-    */
+
 
     public static void main(String[] args) {
         MyBoardGameModel model = new MyBoardGameModel();
