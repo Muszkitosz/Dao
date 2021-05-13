@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myboardgame.FirstSceneController">
+   <bottom>
+      <Button fx:id="next" mnemonicParsing="false" onAction="#switchScene" text="Next" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="10.0" />
+         </BorderPane.margin></Button>
+   </bottom>
+   <center>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="PLAYER_RED:">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                     <padding>
+                        <Insets right="17.0" />
+                     </padding>
+                  </Label>
+                  <TextField alignment="TOP_LEFT" prefHeight="20.0" prefWidth="330.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="7.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="PLAYER_BLUE:">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                  </Label>
+                  <TextField alignment="TOP_LEFT" prefHeight="20.0" prefWidth="330.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="7.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

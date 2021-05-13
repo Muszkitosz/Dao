@@ -45,6 +45,7 @@ public class MyBoardGameController {
 
     @FXML
     private void initialize() {
+        board.getStyleClass().add("board");
         createBoard();
         createPieces();
         setSelectablePositions();

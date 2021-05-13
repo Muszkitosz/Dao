@@ -1,5 +1,8 @@
 package myboardgame.model;
 
+/**
+ * Represents the eight main directions.
+ */
 public enum DiskDirection implements Direction {
 
     UP_LEFT(-1, -1),
@@ -19,14 +22,25 @@ public enum DiskDirection implements Direction {
         this.colChange = colChange;
     }
 
+    /**
+     * {@return the change in the row coordinate when moving towards the direction}
+     */
     public int getRowChange() {
         return rowChange;
     }
 
+    /**
+     * {@return the change in the column coordinate when moving towards the direction}
+     */
     public int getColChange() {
         return colChange;
     }
 
+    /**
+     * {@return the direction that corresponds to the coordinate changes}
+     * @param rowChange the change in the row coordinate
+     * @param colChange the change in the column coordinate
+     */
     public static DiskDirection of(int rowChange, int colChange) {
         for (var direction : values()) {
             if (direction.rowChange == rowChange && direction.colChange == colChange) {
