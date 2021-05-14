@@ -42,11 +42,21 @@ public enum DiskDirection implements Direction {
      * @param colChange the change in the column coordinate
      */
     public static DiskDirection of(int rowChange, int colChange) {
-        for (var direction : values()) {
+        /*for (var direction : values()) {
             if (direction.rowChange == rowChange && direction.colChange == colChange) {
                 return direction;
             }
         }
+        throw new IllegalArgumentException();*/
+        if(rowChange == 0 && colChange > 0) return DiskDirection.RIGHT;
+        if(rowChange > 0 && colChange > 0) return DiskDirection.DOWN_RIGHT;
+        if(rowChange > 0 && colChange == 0) return DiskDirection.DOWN;
+        if(rowChange > 0 && colChange < 0) return DiskDirection.DOWN_LEFT;
+        if(rowChange == 0 && colChange < 0) return DiskDirection.LEFT;
+        if(rowChange < 0 && colChange < 0) return DiskDirection.UP_LEFT;
+        if(rowChange < 0 && colChange == 0) return DiskDirection.UP;
+        if(rowChange < 0 && colChange > 0) return DiskDirection.UP_RIGHT;
+
         throw new IllegalArgumentException();
     }
 

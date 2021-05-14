@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -13,10 +14,7 @@ import javafx.scene.shape.Circle;
 
 // import org.tinylog.Logger;
 
-import myboardgame.model.MyBoardGameModel;
-import myboardgame.model.DiskDirection;
-import myboardgame.model.PieceType;
-import myboardgame.model.Position;
+import myboardgame.model.*;
 
 public class MyBoardGameController {
 
@@ -44,12 +42,16 @@ public class MyBoardGameController {
     private GridPane board;
 
     @FXML
+    private TextField totalSteps;
+
+    @FXML
     private void initialize() {
         board.getStyleClass().add("board");
         createBoard();
         createPieces();
         setSelectablePositions();
         showSelectablePositions();
+        totalSteps.textProperty().bind(model.totalStepsProperty().asString());
     }
 
     private void createBoard() {
@@ -88,7 +90,7 @@ public class MyBoardGameController {
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
         var position = new Position(row, col);
-         // Logger.debug("Click on square {}", position);
+        //  Logger.debug("Click on square {}", position);
         handleClickOnSquare(position);
     }
 
@@ -101,11 +103,16 @@ public class MyBoardGameController {
                 }
             }
             case SELECT_TO -> {
+                if (position.equals(selected)) {
+                    deselectSelectedPosition();
+                    alterSelectionPhase();
+                }
+                else
                 if (selectablePositions.contains(position)) {
-                    var pieceNumber = model.getPieceNumber(selected).getAsInt();
+                    // var pieceNumber = model.getPieceNumber(selected).getAsInt();
                     var direction = DiskDirection.of(position.row() - selected.row(), position.col() - selected.col());
                      // Logger.debug("Moving piece {} {}", pieceNumber, direction);
-                    model.move(pieceNumber, direction);
+                    model.move(selected, direction, position);
                     model.isGoal(PieceType.BLUE);
                     model.isGoal(PieceType.RED);
                     deselectSelectedPosition();
@@ -145,11 +152,15 @@ public class MyBoardGameController {
     private void setSelectablePositions() {
         selectablePositions.clear();
         switch (selectionPhase) {
-            case SELECT_FROM -> selectablePositions.addAll(model.getPiecePositions());
+            case SELECT_FROM -> {
+                for (var position : model.getPlayerPositions()) {
+                    selectablePositions.add(position);
+                }
+            }
             case SELECT_TO -> {
                 var pieceNumber = model.getPieceNumber(selected).getAsInt();
-                for (var direction : model.getValidMoves(pieceNumber)) {
-                    selectablePositions.add(selected.moveTo(direction));
+                for (var position : model.getValidMoves(pieceNumber)) {
+                    selectablePositions.add(position);
                 }
             }
         }

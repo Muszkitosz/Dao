@@ -1,7 +1,6 @@
 package myboardgame.model;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
 import java.util.*;
@@ -22,16 +21,24 @@ public class MyBoardGameModel {
 
     private ReadOnlyObjectWrapper<Player> nextPlayer = new ReadOnlyObjectWrapper<>();
 
+    private ReadOnlyBooleanWrapper goal = new ReadOnlyBooleanWrapper();
+
+    private ReadOnlyIntegerWrapper totalSteps = new ReadOnlyIntegerWrapper();
+
+    public ReadOnlyIntegerProperty totalStepsProperty() {
+        return totalSteps.getReadOnlyProperty();
+    }
+
+    public int getTotalSteps() {
+        return totalSteps.get();
+    }
+
     /**
      * The size of the board.
      */
     public static int BOARD_SIZE = 4;
 
     private final Piece[] pieces;
-
-    public static int Red[] = {0, 1, 2, 3};
-
-    public static int Blue[] = {0, 1, 2, 3};
 
     /**
      * Creates a {@code MyBoardGameModel} object that corresponds to the original initial state of the game.
@@ -45,6 +52,8 @@ public class MyBoardGameModel {
                 new Piece(PieceType.RED, new Position(1, 1)),
                 new Piece(PieceType.RED, new Position(2, 2)),
                 new Piece(PieceType.RED, new Position(3, 3)));
+        totalSteps.set(0);
+        nextPlayer.set(Player.PLAYER_RED);
     }
 
     public MyBoardGameModel(Piece... pieces) {
@@ -78,20 +87,8 @@ public class MyBoardGameModel {
         return pieces[pieceNumber].positionProperty();
     }
 
-    public record Move(DiskDirection direction, int steps) {
-        public Move {
-            if (steps <=0) {
-                throw new IllegalArgumentException();
-            }
-        }
-        public String toString() {
-            return String.format("%s(%d)", direction, steps);
-        }
-    }
-
     public boolean isValidMove(int pieceNumber, DiskDirection direction) {
 
-        int counter = 0;
 
         if (pieceNumber < 0 || pieceNumber >= pieces.length) {
             throw new IllegalArgumentException();
@@ -119,19 +116,47 @@ public class MyBoardGameModel {
          */
         return true;
     }
-    //for (int m = 1; m < BOARD_SIZE; m++) if előtt, ifben direction után m
-    public Set<DiskDirection> getValidMoves(int pieceNumber) {
-        EnumSet<DiskDirection> validMoves = EnumSet.noneOf(DiskDirection.class);
+
+    public void addValidPositionsOnDirection (Position start , DiskDirection direction, List<Position> results) {
+        Position next = start.moveTo(direction);
+            if (isOnBoard(next) && !isOccupiedTile(next)) {
+                results.add(next);
+                addValidPositionsOnDirection(next, direction, results);
+            }
+    }
+
+    public boolean isOccupiedTile (Position pos) {
+        for (var piece : pieces) {
+            if (piece.getPosition().row() == pos.row() && piece.getPosition().col() == pos.col()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<Position> getValidMoves(int pieceNumber) {
+        List<Position> validMoves = new ArrayList<Position>();
+        PieceType pieceType = pieces[pieceNumber].getType();
+        Player player = pieceType == PieceType.RED ? Player.PLAYER_RED : Player.PLAYER_BLUE;
+        if (player != nextPlayer.get()) {
+            return validMoves;
+        }
         for (var direction : DiskDirection.values()) {
-                if (isValidMove(pieceNumber, direction)) {
+                /*if (isValidMove(pieceNumber, direction)) {
                     validMoves.add(direction);
-                }
+                } */
+                addValidPositionsOnDirection(pieces[pieceNumber].getPosition(), direction, validMoves);
         }
         return validMoves;
     }
 
-    public void move(int pieceNumber, DiskDirection direction) {
-        pieces[pieceNumber].moveTo(direction);
+    public void move(Position startpos, DiskDirection direction, Position destination) {
+        var pieceNumber = getPieceNumber(startpos).getAsInt();
+        while (pieces[pieceNumber].getPosition().row() != destination.row() || pieces[pieceNumber].getPosition().col() != destination.col()) {
+            pieces[pieceNumber].moveTo(direction);
+        }
+            totalSteps.set(totalSteps.get() + 1);
+            nextPlayer.set(nextPlayer.get().alter());
     }
 
     public static boolean isOnBoard(Position position) {
@@ -162,6 +187,17 @@ public class MyBoardGameModel {
             joiner.add(piece.toString());
         }
         return joiner.toString();
+    }
+
+    public List<Position> getPlayerPositions() {
+        List<Position> positions = new ArrayList<>();
+        PieceType pieceType = nextPlayer.get() == Player.PLAYER_RED ? PieceType.RED : PieceType.BLUE;
+        for (var piece : pieces) {
+            if (piece.getType() == pieceType) {
+                positions.add(piece.getPosition());
+            }
+        }
+        return positions;
     }
 
     /**

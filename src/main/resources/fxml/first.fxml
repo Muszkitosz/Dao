@@ -5,27 +5,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myboardgame.FirstSceneController">
-   <bottom>
-      <Button fx:id="next" mnemonicParsing="false" onAction="#switchScene" text="Next" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="10.0" />
-         </BorderPane.margin></Button>
-   </bottom>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff5c21;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myboardgame.FirstSceneController">
    <center>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="BOTTOM_LEFT" prefHeight="56.0" prefWidth="585.0">
                <children>
                   <Label text="PLAYER_RED:">
                      <font>
-                        <Font size="33.0" />
+                        <Font name="System Bold Italic" size="30.0" />
                      </font>
                      <padding>
                         <Insets right="17.0" />
                      </padding>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </Label>
-                  <TextField alignment="TOP_LEFT" prefHeight="20.0" prefWidth="330.0">
+                  <TextField fx:id="redPlayerName" alignment="TOP_LEFT" onMouseClicked="#clearRedName" prefHeight="20.0" prefWidth="330.0" promptText="Enter the red player's name!">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -34,15 +31,24 @@
                      </HBox.margin>
                   </TextField>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox prefHeight="49.0" prefWidth="600.0">
                <children>
                   <Label text="PLAYER_BLUE:">
                      <font>
-                        <Font size="33.0" />
+                        <Font name="System Bold Italic" size="30.0" />
                      </font>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
                   </Label>
-                  <TextField alignment="TOP_LEFT" prefHeight="20.0" prefWidth="330.0">
+                  <TextField fx:id="bluePlayerName" alignment="TOP_LEFT" onMouseClicked="#clearBlueName" prefHeight="20.0" prefWidth="330.0" promptText="Enter the blue player's name!">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -53,6 +59,50 @@
                </children>
             </HBox>
          </children>
+         <BorderPane.margin>
+            <Insets left="15.0" />
+         </BorderPane.margin>
       </VBox>
    </center>
+   <bottom>
+      <VBox alignment="CENTER" prefHeight="117.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="startgame" mnemonicParsing="false" onAction="#switchScene" text="Start Game">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="25.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="quit" mnemonicParsing="false" onAction="#quitScene" text="Quit">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+   </bottom>
+   <top>
+      <Label text="Welcome!" BorderPane.alignment="BOTTOM_CENTER">
+         <font>
+            <Font name="System Bold" size="43.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets top="30.0" />
+         </BorderPane.margin>
+      </Label>
+   </top>
 </BorderPane>
