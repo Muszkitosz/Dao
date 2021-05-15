@@ -25,10 +25,10 @@ public class FirstSceneController {
 
         if (redPlayerName.getText().isEmpty() || bluePlayerName.getText().isEmpty()) {
             if (redPlayerName.getText().isEmpty()) {
-                redPlayerName.setText("Please enter a name!");
+                redPlayerName.setPromptText("Please enter a name!");
             }
             if (bluePlayerName.getText().isEmpty()) {
-                bluePlayerName.setText("Please enter a name!");
+                bluePlayerName.setPromptText("Please enter a name!");
             }
         } else {
 
@@ -37,6 +37,14 @@ public class FirstSceneController {
             stage.setScene(new Scene(root));
             stage.show();
         }
+    }
+
+    @FXML
+    private void switchToAbout(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/about.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML

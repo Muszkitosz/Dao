@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff5c21;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myboardgame.AboutSceneController">
+   <children>
+      <VBox prefHeight="316.0" prefWidth="600.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="38.0" prefWidth="600.0" text="This is Zoltan Szilagyi's Board Game">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="Basic rules: ">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="15.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- The first player to move is red">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- In each turn, both players can move one of their disks">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- One player wins if:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- All of the player's disks are in the same row">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets left="60.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- All of the player's disks are in the same column">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="60.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- The player's four disks are in four different corners">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="60.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- The player's four disks form a 2 by 2 square shape">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="60.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- The other player corners one of the player's disks">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="60.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="- This color shows the available choices for the current player: ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <TextField editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: lightgreen;">
+               <VBox.margin>
+                  <Insets left="60.0" top="5.0" />
+               </VBox.margin>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </TextField>
+         </children>
+      </VBox>
+      <Button fx:id="back" layoutX="270.0" layoutY="347.0" mnemonicParsing="false" onAction="#switchBack" text="Back">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+   </children>
+</Pane>

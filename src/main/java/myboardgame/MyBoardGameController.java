@@ -1,10 +1,20 @@
 package myboardgame;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -14,7 +24,9 @@ import javafx.scene.shape.Circle;
 
 // import org.tinylog.Logger;
 
+import javafx.stage.Stage;
 import myboardgame.model.*;
+import org.tinylog.Logger;
 
 public class MyBoardGameController {
 
@@ -90,7 +102,7 @@ public class MyBoardGameController {
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
         var position = new Position(row, col);
-        //  Logger.debug("Click on square {}", position);
+        Logger.debug("Click on square {}", position);
         handleClickOnSquare(position);
     }
 
@@ -109,17 +121,61 @@ public class MyBoardGameController {
                 }
                 else
                 if (selectablePositions.contains(position)) {
-                    // var pieceNumber = model.getPieceNumber(selected).getAsInt();
+                    var pieceNumber = model.getPieceNumber(selected).getAsInt();
                     var direction = DiskDirection.of(position.row() - selected.row(), position.col() - selected.col());
-                     // Logger.debug("Moving piece {} {}", pieceNumber, direction);
+                    Logger.debug("Moving piece {} {}", pieceNumber, direction);
                     model.move(selected, direction, position);
-                    model.isGoal(PieceType.BLUE);
-                    model.isGoal(PieceType.RED);
                     deselectSelectedPosition();
                     alterSelectionPhase();
+                    handleGameOver();
                 }
             }
         }
+    }
+
+    private void handleGameOver() {
+        ButtonType menu = new ButtonType("Main menu");
+        ButtonType exit = new ButtonType("Exit");
+        if (model.isGoal(PieceType.BLUE)) {
+            Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
+            gameOverAlert.initOwner(board.getScene().getWindow());
+            gameOverAlert.setHeaderText("Game over");
+            gameOverAlert.setContentText("The game has been won by Player_Blue in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
+            Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
+                if (buttonType.get().equals(menu)) {
+                    try {
+                        switchToMenu(gameOverAlert);
+                    }
+                    catch (IOException e) {}
+                }
+                else if (buttonType.get().equals(exit)) {
+                    Platform.exit();
+                }
+        }
+        if (model.isGoal(PieceType.RED)) {
+            Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
+            gameOverAlert.initOwner(board.getScene().getWindow());
+            gameOverAlert.setHeaderText("Game over");
+            gameOverAlert.setContentText("The game has been won by Player_red in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
+            Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
+            if (buttonType.get().equals(menu)) {
+                try {
+                    switchToMenu(gameOverAlert);
+                }
+                catch (IOException e) {}
+            }
+            else if (buttonType.get().equals(exit)) {
+                Platform.exit();
+            }
+        }
+    }
+
+    @FXML
+    private void switchToMenu(Alert alert) throws IOException {
+        Stage stage = (Stage) alert.getOwner();
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/first.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     private void alterSelectionPhase() {

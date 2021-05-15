@@ -72,11 +72,19 @@
                   <Insets />
                </opaqueInsets>
                <VBox.margin>
-                  <Insets bottom="25.0" />
+                  <Insets bottom="20.0" />
                </VBox.margin>
                <font>
                   <Font size="16.0" />
                </font>
+            </Button>
+            <Button fx:id="about" mnemonicParsing="false" onAction="#switchToAbout" text="About">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
             </Button>
             <Button fx:id="quit" mnemonicParsing="false" onAction="#quitScene" text="Quit">
                <VBox.margin>

@@ -8,7 +8,6 @@
     <artifactId>MyBoardGame</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <description></description>
     <developers>
         <developer>
             <name>Zoltan Szilagyi</name>
@@ -17,6 +16,7 @@
             <organizationUrl>https://inf.unideb.hu/</organizationUrl>
         </developer>
     </developers>
+    <description>An Apache Maven 3 project for my SWE course</description>
     <scm>
         <developerConnection>scm:git:https://github.com/Muszkitosz/Dao.git</developerConnection>
     </scm>
@@ -115,13 +115,32 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
         <maven.compiler.release>16</maven.compiler.release>
-        <exec.mainClass>remove.me.RemoveThisClass</exec.mainClass>
+        <exec.mainClass>myboardgame.Main</exec.mainClass>
         <javafx.version>16</javafx.version>
+        <tinylog.version>2.3.1</tinylog.version>
         <junit.jupiter.version>5.7.1</junit.jupiter.version>
         <jacoco.version>0.8.7</jacoco.version>
         <surefire.version>3.0.0-M5</surefire.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-api</artifactId>
+            <version>${tinylog.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-impl</artifactId>
+            <version>${tinylog.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>slf4j-tinylog</artifactId>
+            <version>${tinylog.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

@@ -2,6 +2,7 @@ package myboardgame.model;
 
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,8 +21,6 @@ public class MyBoardGameModel {
     }
 
     private ReadOnlyObjectWrapper<Player> nextPlayer = new ReadOnlyObjectWrapper<>();
-
-    private ReadOnlyBooleanWrapper goal = new ReadOnlyBooleanWrapper();
 
     private ReadOnlyIntegerWrapper totalSteps = new ReadOnlyIntegerWrapper();
 
@@ -207,11 +206,11 @@ public class MyBoardGameModel {
     public boolean isGoal(PieceType color) {
 
         if (Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition().row()).distinct().count() == 1) {
-            System.out.println("ggrow");
+            Logger.debug("All "+color+" pieces are in the same row, gg!");
             return true;
         }
         if (Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition().col()).distinct().count() == 1) {
-            System.out.println("ggcol");
+            Logger.debug("All "+color+" pieces are in the same column, gg!");
             return true;
         }
         List<Position> positions = Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition()).collect(Collectors.toList());
@@ -219,7 +218,20 @@ public class MyBoardGameModel {
         int maxrow=Integer.MIN_VALUE;
         int mincol=Integer.MAX_VALUE;
         int maxcol=Integer.MIN_VALUE;
+        int counter = 0;
         for (int i=0; i < positions.size(); i++) {
+            if (positions.get(i).row() == 0 && positions.get(i).col() == 0) {
+                counter++;
+            }
+            if (positions.get(i).row() == BOARD_SIZE-1 && positions.get(i).col() == 0) {
+                counter++;
+            }
+            if (positions.get(i).row() == 0 && positions.get(i).col() == BOARD_SIZE-1) {
+                counter++;
+            }
+            if (positions.get(i).row() == BOARD_SIZE-1 && positions.get(i).col() == BOARD_SIZE-1) {
+                counter++;
+            }
             if (positions.get(i).row() < minrow) {
                 minrow = positions.get(i).row();
             }
@@ -233,8 +245,12 @@ public class MyBoardGameModel {
                 maxcol = positions.get(i).col();
             }
         }
+        if (counter == 4) {
+            Logger.debug("Each "+color+" pieces are in different corners, gg!");
+            return true;
+        }
         if (maxrow-minrow == 1 && maxcol-mincol == 1) {
-            System.out.println("gg");
+            Logger.debug("The "+color+" pieces are forming a 2 by 2 square shape, gg!");
             return true;
         }
         List<Position> positions2 = Arrays.stream(pieces).filter(p -> p.getType()==color).map(p -> p.getPosition()).collect(Collectors.toList());
@@ -249,7 +265,7 @@ public class MyBoardGameModel {
                 }
                 for (int j=0; j < validMoves.size(); j++) {
                     if (positions3.containsAll(validMoves)) {
-                        System.out.println("win "+color);
+                        Logger.debug("One of the "+color+" pieces is cornered by the other player, which is not allowed so gg for the Player_"+color+"!");
                         return true;
                     }
                 }
