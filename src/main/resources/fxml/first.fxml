@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff5c21;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myboardgame.FirstSceneController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ff5c21;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="myboardgame.javafx.controller.FirstSceneController">
    <center>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -27,7 +27,7 @@
                         <Font size="18.0" />
                      </font>
                      <HBox.margin>
-                        <Insets top="7.0" />
+                        <Insets left="1.0" top="7.0" />
                      </HBox.margin>
                   </TextField>
                </children>
@@ -72,15 +72,23 @@
                   <Insets />
                </opaqueInsets>
                <VBox.margin>
-                  <Insets bottom="20.0" />
+                  <Insets bottom="20.0" top="15.0" />
                </VBox.margin>
                <font>
-                  <Font size="16.0" />
+                  <Font size="14.0" />
                </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#switchToLeaderboard" text="Leaderboard">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
             </Button>
             <Button fx:id="about" mnemonicParsing="false" onAction="#switchToAbout" text="About">
                <font>
-                  <Font size="16.0" />
+                  <Font size="14.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="20.0" />
@@ -91,7 +99,7 @@
                   <Insets bottom="20.0" />
                </VBox.margin>
                <font>
-                  <Font size="16.0" />
+                  <Font size="14.0" />
                </font>
             </Button>
          </children>

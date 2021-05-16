@@ -7,11 +7,21 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Class representing the state of the game.
+ */
 public class MyBoardGameModel {
 
+    /**
+     * Enum representing the two players.
+     */
     public enum Player{
         PLAYER_RED, PLAYER_BLUE;
 
+        /**
+         * Swaps the colors.
+         * @return the other color
+         */
         public Player alter() {
             return switch (this) {
                 case PLAYER_RED -> PLAYER_BLUE;
@@ -20,14 +30,36 @@ public class MyBoardGameModel {
         }
     }
 
+    /**
+     * Indicates that whose turn it is.
+     */
     private ReadOnlyObjectWrapper<Player> nextPlayer = new ReadOnlyObjectWrapper<>();
 
+    /**
+     * Returns the next player.
+     * @return the next player
+     */
+    public ReadOnlyObjectProperty<Player> nextPlayerProperty() {return nextPlayer.getReadOnlyProperty();}
+
+    public Player getNextPlayer() {return nextPlayer.get();}
+
+    /**
+     * Indicates the total steps made.
+     */
     private ReadOnlyIntegerWrapper totalSteps = new ReadOnlyIntegerWrapper();
 
+    /**
+     * Returns the total steps made.
+     * @return the total steps made
+     */
     public ReadOnlyIntegerProperty totalStepsProperty() {
         return totalSteps.getReadOnlyProperty();
     }
 
+    /**
+     * Returns the number of total steps.
+     * @return the total steps made
+     */
     public int getTotalSteps() {
         return totalSteps.get();
     }
@@ -37,6 +69,9 @@ public class MyBoardGameModel {
      */
     public static int BOARD_SIZE = 4;
 
+    /**
+     * An {@code array} that contains the {@code pieces}.
+     */
     private final Piece[] pieces;
 
     /**
@@ -55,11 +90,19 @@ public class MyBoardGameModel {
         nextPlayer.set(Player.PLAYER_RED);
     }
 
+    /**
+     * Constructs a model by giving the {@code pieces} to a {@code list} one-by-one.
+     * @param pieces the {@code list} that contains all {@code pieces}
+     */
     public MyBoardGameModel(Piece... pieces) {
         checkPieces(pieces);
         this.pieces = pieces.clone();
     }
 
+    /**
+     * Checks if the positions of the {@code pieces} that you gave for the constructor are valid or not.
+     * @param pieces an array which contains the {@code pieces}
+     */
     private void checkPieces(Piece[] pieces) {
         var seen = new HashSet<Position>();
         for (var piece : pieces) {
@@ -70,14 +113,28 @@ public class MyBoardGameModel {
         }
     }
 
+    /**
+     * Returns the number of pieces on the board.
+     * @return the number of pieces on the board
+     */
     public int getPieceCount() {
         return pieces.length;
     }
 
+    /**
+     * Returns the type of a specific {@code piece}.
+     * @param pieceNumber refers to a specific {@code piece}
+     * @return the {@code PieceType} of a specific {@code piece}
+     */
     public PieceType getPieceType(int pieceNumber) {
         return pieces[pieceNumber].getType();
     }
 
+    /**
+     * Returns the {@code position} of a specific {@code piece}.
+     * @param pieceNumber refers to a specific {@code piece}
+     * @return the {@code position} of a specific {@code piece}
+     */
     public Position getPiecePosition(int pieceNumber) {
         return pieces[pieceNumber].getPosition();
     }
@@ -86,36 +143,12 @@ public class MyBoardGameModel {
         return pieces[pieceNumber].positionProperty();
     }
 
-    public boolean isValidMove(int pieceNumber, DiskDirection direction) {
-
-
-        if (pieceNumber < 0 || pieceNumber >= pieces.length) {
-            throw new IllegalArgumentException();
-        }
-        Position newPosition = pieces[pieceNumber].getPosition().moveTo(direction);
-        if (!isOnBoard(newPosition)) {
-            return false;
-        }
-        for (var piece : pieces) {
-            if (piece.getPosition().equals(newPosition)) {
-                return false;
-            }
-        }
-        /*
-        Position next = getPiecePosition(pieceNumber);
-
-        while (counter <= movelength) {
-            if (getPieceNumber(next.moveTo(direction)).isEmpty()) {
-                counter++;
-                next = next.moveTo(direction);
-            }
-            else {return false;}
-        }
-        System.out.println(direction+":"+counter+"\n");
-         */
-        return true;
-    }
-
+    /**
+     *
+     * @param start is the position of a {@code piece} wich we want to move
+     * @param direction is the direction we want to move towards
+     * @param results is a list which contains the number of steps available towards a specified direction
+     */
     public void addValidPositionsOnDirection (Position start , DiskDirection direction, List<Position> results) {
         Position next = start.moveTo(direction);
             if (isOnBoard(next) && !isOccupiedTile(next)) {
@@ -124,6 +157,11 @@ public class MyBoardGameModel {
             }
     }
 
+    /**
+     * Returns true if a {@code position} is occupied, else returns false.
+     * @param pos is a {@code position} on the board
+     * @return if a tile is occupied or not
+     */
     public boolean isOccupiedTile (Position pos) {
         for (var piece : pieces) {
             if (piece.getPosition().row() == pos.row() && piece.getPosition().col() == pos.col()) {
@@ -133,6 +171,11 @@ public class MyBoardGameModel {
         return false;
     }
 
+    /**
+     * Returns the valid move for the current game state.
+     * @param pieceNumber refers to a specific {@code piece}
+     * @return the valid moves in a {@code list}
+     */
     public List<Position> getValidMoves(int pieceNumber) {
         List<Position> validMoves = new ArrayList<Position>();
         PieceType pieceType = pieces[pieceNumber].getType();
@@ -141,9 +184,6 @@ public class MyBoardGameModel {
             return validMoves;
         }
         for (var direction : DiskDirection.values()) {
-                /*if (isValidMove(pieceNumber, direction)) {
-                    validMoves.add(direction);
-                } */
                 addValidPositionsOnDirection(pieces[pieceNumber].getPosition(), direction, validMoves);
         }
         return validMoves;
@@ -158,17 +198,14 @@ public class MyBoardGameModel {
             nextPlayer.set(nextPlayer.get().alter());
     }
 
+    /**
+     * Checks if a {@code position} is on the board or not.
+     * @param position refers to a {@code position}
+     * @return true if the {@code position} is on the board, otherwise false
+     */
     public static boolean isOnBoard(Position position) {
         return 0 <= position.row() && position.row() < BOARD_SIZE
                 && 0 <= position.col() && position.col() < BOARD_SIZE;
-    }
-
-    public List<Position> getPiecePositions() {
-        List<Position> positions = new ArrayList<>(pieces.length);
-        for (var piece : pieces) {
-            positions.add(piece.getPosition());
-        }
-        return positions;
     }
 
     public OptionalInt getPieceNumber(Position position) {
@@ -180,14 +217,10 @@ public class MyBoardGameModel {
         return OptionalInt.empty();
     }
 
-    public String toString() {
-        StringJoiner joiner = new StringJoiner(",", "[", "]");
-        for (var piece : pieces) {
-            joiner.add(piece.toString());
-        }
-        return joiner.toString();
-    }
-
+    /**
+     * Returns a {@code list} which contains all the {@code piece} {@code positions} for the player in turn.
+     * @return the positions of the {@code pieces} specified for the player in turn
+     */
     public List<Position> getPlayerPositions() {
         List<Position> positions = new ArrayList<>();
         PieceType pieceType = nextPlayer.get() == Player.PLAYER_RED ? PieceType.RED : PieceType.BLUE;
@@ -273,6 +306,13 @@ public class MyBoardGameModel {
         return false;
     }
 
+    public String toString() {
+        StringJoiner joiner = new StringJoiner(",", "[", "]");
+        for (var piece : pieces) {
+            joiner.add(piece.toString());
+        }
+        return joiner.toString();
+    }
 
     public static void main(String[] args) {
         MyBoardGameModel model = new MyBoardGameModel();

@@ -1,11 +1,16 @@
-package myboardgame;
+package myboardgame.javafx.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -25,8 +31,16 @@ import javafx.scene.shape.Circle;
 // import org.tinylog.Logger;
 
 import javafx.stage.Stage;
+import lombok.extern.java.Log;
+import myboardgame.helper.User;
+import myboardgame.helper.UserDao;
 import myboardgame.model.*;
 import org.tinylog.Logger;
+
+import javax.inject.Inject;
+import javax.swing.*;
+
+import static java.lang.Math.abs;
 
 public class MyBoardGameController {
 
@@ -50,11 +64,33 @@ public class MyBoardGameController {
 
     private MyBoardGameModel model = new MyBoardGameModel();
 
+    UserDao userDao = new UserDao();
+
     @FXML
     private GridPane board;
 
     @FXML
     private TextField totalSteps;
+
+    @FXML
+    private TextField showCurrentPlayer;
+
+    @Inject
+    private FXMLLoader fxmlLoader;
+
+    private String redPlayerName;
+
+    private String bluePlayerName;
+
+    public void setRedPlayerName(String redPlayerName) {
+        this.redPlayerName = redPlayerName;
+    }
+
+    public void setBluePlayerName(String bluePlayerName) {
+        this.bluePlayerName = bluePlayerName;
+    }
+
+    public String winnerName = "";
 
     @FXML
     private void initialize() {
@@ -64,6 +100,8 @@ public class MyBoardGameController {
         setSelectablePositions();
         showSelectablePositions();
         totalSteps.textProperty().bind(model.totalStepsProperty().asString());
+        showCurrentPlayer.styleProperty().bind(Bindings.when(model.nextPlayerProperty().isEqualTo(MyBoardGameModel.Player.PLAYER_BLUE)).then("-fx-text-fill:blue").otherwise("-fx-text-fill:red"));
+        showCurrentPlayer.textProperty().bind(model.nextPlayerProperty().asString());
     }
 
     private void createBoard() {
@@ -102,7 +140,7 @@ public class MyBoardGameController {
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
         var position = new Position(row, col);
-        Logger.debug("Click on square {}", position);
+        Logger.debug("Clicked on square {}", position);
         handleClickOnSquare(position);
     }
 
@@ -118,12 +156,21 @@ public class MyBoardGameController {
                 if (position.equals(selected)) {
                     deselectSelectedPosition();
                     alterSelectionPhase();
+                    Logger.debug("Deselecting piece");
                 }
                 else
                 if (selectablePositions.contains(position)) {
                     var pieceNumber = model.getPieceNumber(selected).getAsInt();
                     var direction = DiskDirection.of(position.row() - selected.row(), position.col() - selected.col());
-                    Logger.debug("Moving piece {} {}", pieceNumber, direction);
+                    int rowDif = position.row() - selected.row();
+                    int colDif = position.col() -selected.col();
+                    int distance = 0;
+                    if (rowDif == 0 || colDif == 0) {
+                        distance = abs(rowDif+colDif);
+                    } else {
+                        distance = ((abs(rowDif)+abs(colDif))/2);
+                    }
+                    Logger.debug("Moving piece "+pieceNumber+" "+direction+" "+distance+" times");
                     model.move(selected, direction, position);
                     deselectSelectedPosition();
                     alterSelectionPhase();
@@ -137,10 +184,14 @@ public class MyBoardGameController {
         ButtonType menu = new ButtonType("Main menu");
         ButtonType exit = new ButtonType("Exit");
         if (model.isGoal(PieceType.BLUE)) {
+            winnerName = bluePlayerName;
             Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
             gameOverAlert.initOwner(board.getScene().getWindow());
             gameOverAlert.setHeaderText("Game over");
-            gameOverAlert.setContentText("The game has been won by Player_Blue in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
+            gameOverAlert.setContentText("The game has been won by "+winnerName+" in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+            userDao.saveUser(new User (winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
+            Logger.info(winnerName+" won the game.");
             Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
                 if (buttonType.get().equals(menu)) {
                     try {
@@ -153,19 +204,27 @@ public class MyBoardGameController {
                 }
         }
         if (model.isGoal(PieceType.RED)) {
+            winnerName = redPlayerName;
             Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
             gameOverAlert.initOwner(board.getScene().getWindow());
             gameOverAlert.setHeaderText("Game over");
-            gameOverAlert.setContentText("The game has been won by Player_red in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
+            gameOverAlert.setContentText("The game has been won by "+winnerName+" in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+            userDao.saveUser(new User (winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
+            Logger.info(winnerName+" won the game.");
             Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
             if (buttonType.get().equals(menu)) {
                 try {
                     switchToMenu(gameOverAlert);
                 }
-                catch (IOException e) {}
+                catch (IOException e) {
+                    Logger.debug("Could not exit to Main menu");
+                }
             }
             else if (buttonType.get().equals(exit)) {
                 Platform.exit();
+                Logger.debug("Click on exit");
+                Logger.info("Exiting...");
             }
         }
     }
@@ -176,6 +235,8 @@ public class MyBoardGameController {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/first.fxml"));
         stage.setScene(new Scene(root));
         stage.show();
+        Logger.debug("Click on Main menu");
+        Logger.info("Switching to Main menu...");
     }
 
     private void alterSelectionPhase() {
@@ -246,7 +307,7 @@ public class MyBoardGameController {
     }
 
     private void piecePositionChange(ObservableValue<? extends Position> observable, Position oldPosition, Position newPosition) {
-         // Logger.debug("Move: {} -> {}", oldPosition, newPosition);
+        Logger.debug("Move: {} -> {}", oldPosition, newPosition);
         StackPane oldSquare = getSquare(oldPosition);
         StackPane newSquare = getSquare(newPosition);
         newSquare.getChildren().addAll(oldSquare.getChildren());

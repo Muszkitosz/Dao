@@ -1,4 +1,4 @@
-package myboardgame;
+package myboardgame.javafx;
 
 import javafx.application.Application;
 

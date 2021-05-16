@@ -16,19 +16,23 @@ public class PositionTest {
 
     @BeforeEach
     void init() {
-        position = new Position(0, 0);
+        position = new Position(2, 2);
     }
 
     @Test
     void moveTo() {
-        assertPosition(-1, 0, position.moveTo(DiskDirection.UP));
-        assertPosition(0, 1, position.moveTo(DiskDirection.RIGHT));
-        assertPosition(1, 0, position.moveTo(DiskDirection.DOWN));
-        assertPosition(0, -1, position.moveTo(DiskDirection.LEFT));
+        assertPosition(1, 1, position.moveTo(DiskDirection.UP_LEFT));
+        assertPosition(1, 2, position.moveTo(DiskDirection.UP));
+        assertPosition(1, 3, position.moveTo(DiskDirection.UP_RIGHT));
+        assertPosition(2, 3, position.moveTo(DiskDirection.RIGHT));
+        assertPosition(3, 3, position.moveTo(DiskDirection.DOWN_RIGHT));
+        assertPosition(3, 2, position.moveTo(DiskDirection.DOWN));
+        assertPosition(3, 1, position.moveTo(DiskDirection.DOWN_LEFT));
+        assertPosition(2, 1, position.moveTo(DiskDirection.LEFT));
     }
 
     @Test
     void testToString() {
-        assertEquals("(0,0)", position.toString());
+        assertEquals("(2,2)", position.toString());
     }
 }
