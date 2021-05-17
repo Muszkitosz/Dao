@@ -151,8 +151,14 @@ public class MyBoardGameModelTest {
 
     @Test
     void testGetValidMoves() {
-        List<Position> validMoves1 = new ArrayList<>();
-
+        List<Position> expectedValidMoves = new ArrayList<>();
+        List<Position> realValidMoves = state1.getValidMoves(4);
+        expectedValidMoves.add(new Position(0,1));
+        expectedValidMoves.add(new Position(0,2));
+        expectedValidMoves.add(new Position(1,0));
+        expectedValidMoves.add(new Position(2,0));
+        assertEquals(expectedValidMoves.size(), realValidMoves.size());
+        assertTrue(realValidMoves.containsAll(expectedValidMoves));
     }
 
     @Test
@@ -218,6 +224,18 @@ public class MyBoardGameModelTest {
         state1.move(oldPosition, DiskDirection.LEFT, new Position(1,0));
         state1.move(oldPosition2, DiskDirection.DOWN, new Position(1,3));
         assertEquals(2, state1.getTotalSteps());
+    }
+
+    @Test
+    void testCheckPieces() {
+        assertThrows(IllegalArgumentException.class, () -> {MyBoardGameModel state8 = new MyBoardGameModel( new Piece(PieceType.BLUE, new Position(0, 3)),
+                new Piece(PieceType.BLUE, new Position(1, 3)),
+                new Piece(PieceType.BLUE, new Position(0, 0)),
+                new Piece(PieceType.BLUE, new Position(1, 0)),
+                new Piece(PieceType.RED, new Position(0, 3)),
+                new Piece(PieceType.RED, new Position(1, 1)),
+                new Piece(PieceType.RED, new Position(2, 2)),
+                new Piece(PieceType.RED, new Position(2, 0)));});
     }
 
     @Test

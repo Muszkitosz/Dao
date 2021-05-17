@@ -11,10 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class UserDao {
 
     private final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-
     public List<User> getUsers() {
         var ref = new TypeReference<List<User>>() {
         };
@@ -29,11 +29,10 @@ public class UserDao {
 
     public void saveUser(User userToSave) {
 
+
         try {
             List<User> users = getUsers();
-
             users.add(userToSave);
-
             FileWriter writer = new FileWriter(getClass().getClassLoader().getResource("users.json").getPath());
 
             objectMapper.writeValue(writer, users);
@@ -52,7 +51,6 @@ public class UserDao {
             FileWriter writer = new FileWriter(getClass().getClassLoader().getResource("users.json").getPath());
 
             objectMapper.writeValue(writer, users);
-
             Logger.info("Writing file...");
             Logger.debug("Reseting Leaderboard");
         } catch (Exception e2) {
@@ -61,7 +59,6 @@ public class UserDao {
     }
 
     public List<User> getTopUsers() {
-        Logger.info("Creating leaderboard...");
         return getUsers().stream().sorted(Comparator.comparing(User::getTotalSteps)).collect(Collectors.toList());
     }
 }

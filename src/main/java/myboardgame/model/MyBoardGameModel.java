@@ -41,8 +41,6 @@ public class MyBoardGameModel {
      */
     public ReadOnlyObjectProperty<Player> nextPlayerProperty() {return nextPlayer.getReadOnlyProperty();}
 
-    public Player getNextPlayer() {return nextPlayer.get();}
-
     /**
      * Indicates the total steps made.
      */
@@ -149,7 +147,7 @@ public class MyBoardGameModel {
      * @param direction is the direction we want to move towards
      * @param results is a list which contains the number of steps available towards a specified direction
      */
-    public void addValidPositionsOnDirection (Position start , DiskDirection direction, List<Position> results) {
+    private void addValidPositionsOnDirection (Position start , DiskDirection direction, List<Position> results) {
         Position next = start.moveTo(direction);
             if (isOnBoard(next) && !isOccupiedTile(next)) {
                 results.add(next);

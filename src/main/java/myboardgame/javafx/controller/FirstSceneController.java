@@ -59,6 +59,7 @@ public class FirstSceneController {
         stage.setScene(new Scene(root));
         stage.show();
         Logger.debug("Click on About");
+        Logger.info("Switching to About scene...");
     }
 
     @FXML

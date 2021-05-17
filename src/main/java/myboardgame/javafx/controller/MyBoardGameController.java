@@ -75,9 +75,6 @@ public class MyBoardGameController {
     @FXML
     private TextField showCurrentPlayer;
 
-    @Inject
-    private FXMLLoader fxmlLoader;
-
     private String redPlayerName;
 
     private String bluePlayerName;
@@ -181,51 +178,39 @@ public class MyBoardGameController {
     }
 
     private void handleGameOver() {
-        ButtonType menu = new ButtonType("Main menu");
-        ButtonType exit = new ButtonType("Exit");
         if (model.isGoal(PieceType.BLUE)) {
             winnerName = bluePlayerName;
-            Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
-            gameOverAlert.initOwner(board.getScene().getWindow());
-            gameOverAlert.setHeaderText("Game over");
-            gameOverAlert.setContentText("The game has been won by "+winnerName+" in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
-            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-            userDao.saveUser(new User (winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
-            Logger.info(winnerName+" won the game.");
-            Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
-                if (buttonType.get().equals(menu)) {
-                    try {
-                        switchToMenu(gameOverAlert);
-                    }
-                    catch (IOException e) {}
-                }
-                else if (buttonType.get().equals(exit)) {
-                    Platform.exit();
-                }
+            makeAnAlert(winnerName);
         }
-        if (model.isGoal(PieceType.RED)) {
+        else if (model.isGoal(PieceType.RED)) {
             winnerName = redPlayerName;
-            Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
-            gameOverAlert.initOwner(board.getScene().getWindow());
-            gameOverAlert.setHeaderText("Game over");
-            gameOverAlert.setContentText("The game has been won by "+winnerName+" in a total of "+model.getTotalSteps()+" steps!\nCongratulations!");
-            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-            userDao.saveUser(new User (winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
-            Logger.info(winnerName+" won the game.");
-            Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
-            if (buttonType.get().equals(menu)) {
-                try {
-                    switchToMenu(gameOverAlert);
-                }
-                catch (IOException e) {
-                    Logger.debug("Could not exit to Main menu");
-                }
+            makeAnAlert(winnerName);
+        }
+    }
+
+    private void makeAnAlert(String winnerName) {
+        ButtonType menu = new ButtonType("Main menu");
+        ButtonType exit = new ButtonType("Exit");
+        Alert gameOverAlert = new Alert(Alert.AlertType.INFORMATION, "", menu, exit);
+        gameOverAlert.initOwner(board.getScene().getWindow());
+        gameOverAlert.setHeaderText("Game over");
+        gameOverAlert.setContentText("The game has been won by "+winnerName+" in a total of "+model.getTotalSteps()+" steps!\nCongratulations!\nCheck out the Leaderboard in the Main menu!");
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+        userDao.saveUser(new User (winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
+        Logger.info(winnerName+" won the game.");
+        Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
+        if (buttonType.get().equals(menu)) {
+            try {
+                switchToMenu(gameOverAlert);
             }
-            else if (buttonType.get().equals(exit)) {
-                Platform.exit();
-                Logger.debug("Click on exit");
-                Logger.info("Exiting...");
+            catch (IOException e) {
+                Logger.debug("Could not exit to Main menu");
             }
+        }
+        else if (buttonType.get().equals(exit)) {
+            Platform.exit();
+            Logger.debug("Click on exit");
+            Logger.info("Exiting...");
         }
     }
 
