@@ -47,13 +47,12 @@ public class LeaderBoardController {
 
     @FXML
     private void resetLeaderboard(ActionEvent event) throws IOException {
+        Logger.debug("Click on Reset Leaderboard");
         userDao.resetUsers();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/leaderboard.fxml"));
         stage.setScene(new Scene(root));
         stage.show();
-        Logger.debug("Click on Reset Leaderboard");
-        Logger.info("Reseting Leaderboard...");
     }
 
     private void addToLeaderboard() {

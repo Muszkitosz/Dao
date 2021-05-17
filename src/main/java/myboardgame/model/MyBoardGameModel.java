@@ -137,13 +137,18 @@ public class MyBoardGameModel {
         return pieces[pieceNumber].getPosition();
     }
 
+    /**
+     * Returns a {@code positionProperty} specified to a {@code piece}.
+     * @param pieceNumber specifies a {@code piece}
+     * @return a {@code positionProperty} specified to a {@code piece}
+     */
     public ObjectProperty<Position> positionProperty(int pieceNumber) {
         return pieces[pieceNumber].positionProperty();
     }
 
     /**
-     *
-     * @param start is the position of a {@code piece} wich we want to move
+     * Adds the available positions to a list specified to a start position.
+     * @param start is the position of a {@code piece} which we want to move
      * @param direction is the direction we want to move towards
      * @param results is a list which contains the number of steps available towards a specified direction
      */
@@ -187,6 +192,12 @@ public class MyBoardGameModel {
         return validMoves;
     }
 
+    /**
+     * Moves a {@code piece} to a destination.
+     * @param startpos is the position of the current {@code piece}
+     * @param direction is the way you want to move the {@code piece}
+     * @param destination is the position where you want to move the {@code piece}
+     */
     public void move(Position startpos, DiskDirection direction, Position destination) {
         var pieceNumber = getPieceNumber(startpos).getAsInt();
         while (pieces[pieceNumber].getPosition().row() != destination.row() || pieces[pieceNumber].getPosition().col() != destination.col()) {
@@ -206,6 +217,11 @@ public class MyBoardGameModel {
                 && 0 <= position.col() && position.col() < BOARD_SIZE;
     }
 
+    /**
+     * Returns if a position contains a {@code piece} or not
+     * @param position is the {@code position} what we are checking in each cycle
+     * @return an {@code OptionalInt} if a position contains a {@code piece}
+     */
     public OptionalInt getPieceNumber(Position position) {
         for (int i = 0; i < pieces.length; i++) {
             if (pieces[i].getPosition().equals(position)) {

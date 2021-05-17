@@ -24,7 +24,7 @@ public enum DiskDirection implements Direction {
 
     /**
      * Returns the change in the row coordinate when moving towards the direction.
-     * {@return the change in the row coordinate when moving towards the direction}
+     * @return the change in the row coordinate when moving towards the direction
      */
     public int getRowChange() {
         return rowChange;
@@ -32,7 +32,7 @@ public enum DiskDirection implements Direction {
 
     /**
      * Returns the change in the column coordinate when moving towards the direction.
-     * {@return the change in the column coordinate when moving towards the direction}
+     * @return the change in the column coordinate when moving towards the direction
      */
     public int getColChange() {
         return colChange;
@@ -40,10 +40,9 @@ public enum DiskDirection implements Direction {
 
     /**
      * Returns the direction that corresponds to the coordinate changes.
-     *
-     * {@return the direction that corresponds to the coordinate changes}
      * @param rowChange the change in the row coordinate
      * @param colChange the change in the column coordinate
+     * @return the direction that corresponds to the coordinate changes
      */
     public static DiskDirection of(int rowChange, int colChange) {
         if(rowChange == 0 && colChange > 0) return DiskDirection.RIGHT;

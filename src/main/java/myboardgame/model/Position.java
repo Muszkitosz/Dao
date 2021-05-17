@@ -7,9 +7,9 @@ public record Position(int row, int col) {
 
     /**
      * Moves a {@code Piece} by {@code Direction}.
-     * {@return the position whose vertical and horizontal distances from this position are
-     * equal to the coordinate changes of the direction given}
      * @param direction a direction that specifies a change in the coordinates
+     * @return the position whose vertical and horizontal distances from this position are
+     * equal to the coordinate changes of the direction given
      */
     public Position moveTo(Direction direction) {
         return new Position(row + direction.getRowChange(), col + direction.getColChange());
