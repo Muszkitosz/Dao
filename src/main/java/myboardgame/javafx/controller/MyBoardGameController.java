@@ -28,7 +28,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-// import org.tinylog.Logger;
 
 import javafx.stage.Stage;
 import lombok.extern.java.Log;

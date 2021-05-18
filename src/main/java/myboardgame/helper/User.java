@@ -21,7 +21,7 @@ public class User {
     private int totalSteps;
 
     /**
-     * The date when the game was played
+     * The date when the game was played.
      */
     private String issueDate;
 

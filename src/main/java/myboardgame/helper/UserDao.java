@@ -23,6 +23,12 @@ public class UserDao {
     File file;
 
     private final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+
+    /**
+     * Returns a {@code list} with the users names who played the game recently. Before this
+     * checks for the file which contains this {@code list}. If it does not exists, than create it with an empty {@code list}.
+     * @return a {@code list} with the users names who played the game recently
+     */
     public List<User> getUsers() {
         var ref = new TypeReference<List<User>>() {
         };
