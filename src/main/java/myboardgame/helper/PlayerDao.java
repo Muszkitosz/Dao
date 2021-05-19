@@ -18,23 +18,23 @@ import java.util.stream.Collectors;
 /**
  * Class handles the operations with the players data.
  */
-public class UserDao {
+public class PlayerDao {
 
     File file;
 
     private final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     /**
-     * Returns a {@code list} with the users names who played the game recently. Before this
+     * Returns a {@code list} with the players names who played the game recently. Before this
      * checks for the file which contains this {@code list}. If it does not exists, than create it with an empty {@code list}.
-     * @return a {@code list} with the users names who played the game recently
+     * @return a {@code list} with the players names who played the game recently
      */
-    public List<User> getUsers() {
-        var ref = new TypeReference<List<User>>() {
+    public List<Player> getPlayers() {
+        var ref = new TypeReference<List<Player>>() {
         };
         String path = System.getProperty("user.home")+"/.dao";
         File directory = new File(path);
-        file = new File(directory.getPath()+"/users.json");
+        file = new File(directory.getPath()+"/players.json");
         try {
            Files.createDirectories(Paths.get(path));
         } catch (IOException io) {
@@ -63,15 +63,15 @@ public class UserDao {
 
     /**
      * Saves a player name to the Leaderboard.
-     * @param userToSave is the player who won the latest match
+     * @param playerToSave is the player who won the latest match
      */
-    public void saveUser(User userToSave) {
+    public void savePlayer(Player playerToSave) {
         try {
-            List<User> users = getUsers();
-            users.add(userToSave);
+            List<Player> players = getPlayers();
+            players.add(playerToSave);
             FileWriter writer = new FileWriter(file);
 
-            objectMapper.writeValue(writer, users);
+            objectMapper.writeValue(writer, players);
 
             Logger.info("Writing file...");
         } catch (Exception e2) {
@@ -82,14 +82,14 @@ public class UserDao {
     /**
      * Resets the Leaderboard with an empty {@code list}.
      */
-    public void resetUsers() {
+    public void resetPlayersList() {
 
         try {
-            List<User> users = new ArrayList<>();
+            List<Player> players = new ArrayList<>();
 
             FileWriter writer = new FileWriter(file);
 
-            objectMapper.writeValue(writer, users);
+            objectMapper.writeValue(writer, players);
             Logger.info("Writing file...");
             Logger.debug("Reseting Leaderboard");
         } catch (Exception e2) {
@@ -101,7 +101,7 @@ public class UserDao {
      * Returns the top players sorted by the total steps made.
      * @return the top players sorted by the total steps made
      */
-    public List<User> getTopUsers() {
-        return getUsers().stream().sorted(Comparator.comparing(User::getTotalSteps)).collect(Collectors.toList());
+    public List<Player> getTopPlayers() {
+        return getPlayers().stream().sorted(Comparator.comparing(Player::getTotalSteps)).collect(Collectors.toList());
     }
 }

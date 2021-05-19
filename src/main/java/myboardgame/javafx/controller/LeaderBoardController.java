@@ -7,16 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import myboardgame.helper.User;
-import myboardgame.helper.UserDao;
+import myboardgame.helper.Player;
+import myboardgame.helper.PlayerDao;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -25,7 +22,7 @@ import java.util.List;
 
 public class LeaderBoardController {
 
-    UserDao userDao = new UserDao();
+    PlayerDao playerDao = new PlayerDao();
 
     @FXML
     private GridPane leaderBoard;
@@ -48,7 +45,7 @@ public class LeaderBoardController {
     @FXML
     private void resetLeaderboard(ActionEvent event) throws IOException {
         Logger.debug("Click on Reset Leaderboard");
-        userDao.resetUsers();
+        playerDao.resetPlayersList();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/leaderboard.fxml"));
         stage.setScene(new Scene(root));
@@ -56,14 +53,14 @@ public class LeaderBoardController {
     }
 
     private void addToLeaderboard() {
-        List<User> topUsers = userDao.getTopUsers();
+        List<Player> topPlayers = playerDao.getTopPlayers();
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
 
         for (int i=1; i < 16; i++) {
 
-            if (i-1 < userDao.getTopUsers().size()) {
-                leaderBoard.add(new Label(topUsers.get(i-1).getUserName()), 0, i);
-                leaderBoard.add(new Label(Integer.toString(topUsers.get(i-1).getTotalSteps())),1, i);
+            if (i-1 < playerDao.getTopPlayers().size()) {
+                leaderBoard.add(new Label(topPlayers.get(i-1).getPlayerName()), 0, i);
+                leaderBoard.add(new Label(Integer.toString(topPlayers.get(i-1).getTotalSteps())),1, i);
                 leaderBoard.add(new Label(ZonedDateTime.now().format(formatter)), 2, i);
             }
         }

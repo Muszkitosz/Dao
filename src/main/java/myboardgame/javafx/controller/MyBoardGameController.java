@@ -1,7 +1,6 @@
 package myboardgame.javafx.controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -12,15 +11,12 @@ import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -30,14 +26,10 @@ import javafx.scene.shape.Circle;
 
 
 import javafx.stage.Stage;
-import lombok.extern.java.Log;
-import myboardgame.helper.User;
-import myboardgame.helper.UserDao;
+import myboardgame.helper.Player;
+import myboardgame.helper.PlayerDao;
 import myboardgame.model.*;
 import org.tinylog.Logger;
-
-import javax.inject.Inject;
-import javax.swing.*;
 
 import static java.lang.Math.abs;
 
@@ -63,7 +55,7 @@ public class MyBoardGameController {
 
     private MyBoardGameModel model = new MyBoardGameModel();
 
-    UserDao userDao = new UserDao();
+    PlayerDao playerDao = new PlayerDao();
 
     @FXML
     private GridPane board;
@@ -195,7 +187,7 @@ public class MyBoardGameController {
         gameOverAlert.setHeaderText("Game over");
         gameOverAlert.setContentText("The game has been won by "+winnerName+" in a total of "+model.getTotalSteps()+" steps!\nCongratulations!\nCheck out the Leaderboard in the Main menu!");
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-        userDao.saveUser(new User (winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
+        playerDao.savePlayer(new Player(winnerName, model.getTotalSteps(), ZonedDateTime.now().format(formatter)));
         Logger.info(winnerName+" won the game.");
         Optional<ButtonType> buttonType = gameOverAlert.showAndWait();
         if (buttonType.get().equals(menu)) {

@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class User {
+public class Player {
 
     /**
      * The name of the player, which will be the winner's name.
      */
-    private String userName;
+    private String playerName;
 
     /**
      * The total steps made during the game.
@@ -27,12 +27,12 @@ public class User {
 
     /**
      * Indicates a player with specified information.
-     * @param userName is the name of the player
+     * @param playerName is the name of the player
      * @param totalSteps is a number which indicates the total steps made during a match
      * @param issueDate is the date when a match was played
      */
-    public User(String userName, int totalSteps, String issueDate) {
-        this.userName = userName;
+    public Player(String playerName, int totalSteps, String issueDate) {
+        this.playerName = playerName;
         this.totalSteps = totalSteps;
         this.issueDate = issueDate;
     }
